@@ -15,18 +15,21 @@ This is a **Full-Stack Todo Application** built using the MERN stack (MongoDB, E
 ## Technologies Used
 
 ### Frontend:
+
 - **React**: UI development.
 - **Vite**: Fast development server.
 - **TypeScript**: Type-safe development.
 - **Tailwind CSS**: For styling.
 
 ### Backend:
+
 - **Node.js**: JavaScript runtime.
 - **Express.js**: Backend framework.
 - **TypeScript**: Type-safe server logic.
 - **MongoDB**: NoSQL database.
 
 ### DevOps:
+
 - **Docker**: Containerization for all services.
 - **Docker Compose**: Multi-container orchestration.
 
@@ -61,12 +64,14 @@ Ensure you have the following installed:
 ### Using Docker
 
 1. Clone the repository:
+
    ```bash
-   git clone https://github.com/FaizanQureshi1220/FullStack-Todo-MERN-Application-with-DOCKER.git
-   cd FullStack-Todo-MERN-Application-with-DOCKER
+   git clone https://github.com/nurmandev/Todo-App
+   cd Todo-App
    ```
 
 2. Build and start the containers:
+
    ```bash
    docker-compose up --build
    ```
@@ -78,12 +83,14 @@ Ensure you have the following installed:
 ### Without Docker
 
 1. Clone the repository:
+
    ```bash
-   git clone https://github.com/FaizanQureshi1220/FullStack-Todo-MERN-Application-with-DOCKER.git
-   cd FullStack-Todo-MERN-Application-with-DOCKER
+   git clone https://github.com/nurmandev/Todo-App
+   cd Todo-App
    ```
 
 2. Set up the backend:
+
    ```bash
    cd api
    npm install
@@ -91,6 +98,7 @@ Ensure you have the following installed:
    ```
 
 3. Set up the frontend:
+
    ```bash
    cd web
    npm install
@@ -106,6 +114,7 @@ Ensure you have the following installed:
 Create `.env` files for both frontend and backend to configure environment-specific variables.
 
 ### Backend `.env` example:
+
 ```env
 PORT=5000
 MONGO_URI=mongodb://mongo:27017/todo-app
@@ -117,7 +126,7 @@ JWT_SECRET=your_secret_key
 Here is an overview of the `docker-compose.yml` configuration:
 
 ```yaml
-version: '3.8'
+version: "3.8"
 services:
   backend:
     build: ./api
