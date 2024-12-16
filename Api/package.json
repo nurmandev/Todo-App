@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node dist/routes.js",
     "dev": "nodemon dist/routes.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
@@ -16,7 +16,6 @@
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.7.1",
@@ -26,6 +25,9 @@
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/jsonwebtoken": "^9.0.7",
+    "dotenv": "^16.4.7",
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0",
     "typescript": "^5.6.3"
   }
 }

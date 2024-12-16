@@ -1,0 +1,153 @@
+Documentation: Setting Up and Running the Application
+This document provides a clear step-by-step guide on setting up and running the application, along with explanations of its key functionalities.
+
+1. Prerequisites
+Before setting up the application, ensure you have the following installed:
+
+Node.js: Version 16 or higher
+npm: Comes with Node.js
+MongoDB: A running MongoDB instance or MongoDB Atlas
+Postman or cURL: To test the API endpoints (optional)
+Git: To clone the repository
+Jest: For running the tests (installed with the project)
+2. Installation
+Step 1: Clone the repository
+Clone the repository to your local machine:
+
+bash
+Copy code
+git clone https://github.com/nurmandev/Todo-App
+cd pTodo-App
+Step 2: Install dependencies
+Install the project dependencies by running:
+
+bash
+Copy code
+npm install
+3. Environment Configuration
+Create a .env file in the root of the project and configure the following environment variables:
+
+env
+Copy code
+PORT=3000
+DATABASE_URL=mongodb://localhost:27017/todoapp
+TEST_DATABASE_URL=mongodb://localhost:27017/todoapp_test
+JWT_SECRET=your_jwt_secret
+PORT: The port where the application will run.
+DATABASE_URL: Connection string for your MongoDB instance.
+TEST_DATABASE_URL: Separate MongoDB instance for testing.
+JWT_SECRET: Secret key for generating JWT tokens.
+4. Running the Application
+Start the application using the following command:
+
+bash
+Copy code
+npm start
+By default, the application runs on http://localhost:3000.
+
+Available Scripts
+npm start: Runs the application in production mode.
+npm run dev: Runs the application in development mode using nodemon.
+5. API Endpoints
+Here are the key API endpoints and their functionalities:
+
+Endpoint	Method	Description
+/signup	POST	Registers a new user and returns a token.
+/login	POST	Logs in an existing user and returns a token.
+/create	POST	Creates a new todo.
+/todos	GET	Fetches all todos for the authenticated user.
+/todos/:id	PUT	Updates an existing todo.
+/todos/:id	DELETE	Deletes a specific todo.
+6. Running Tests
+This application uses Jest for testing. Run the tests using the following command:
+
+bash
+Copy code
+npm test
+Test Files
+auth.test.js: Covers user authentication features like signup and login.
+todo.test.js: Tests CRUD operations for todos.
+7. Folder Structure
+The application follows a modular structure for scalability:
+
+plaintext
+Copy code
+Todo-App/
+├── dist/                    # Compiled JavaScript code
+├── src/                     # Source code
+│   ├── routes/              # API route handlers
+│   ├── controllers/         # Application logic
+│   ├── models/              # Mongoose schemas
+│   ├── middleware/          # Authentication and other middleware
+│   └── utils/               # Utility functions
+├── tests/                   # Test files (e.g., auth.test.js, todo.test.js)
+├── .env                     # Environment variables
+├── package.json             # Project metadata and scripts
+└── README.md                # Documentation
+8. Key Functionalities (Code Comments)
+Example: User Signup
+Code in controllers/authController.js:
+
+javascript
+Copy code
+// Controller to handle user signup
+const signup = async (req, res) => {
+  try {
+    // Extract user details from request body
+    const { name, email, password } = req.body;
+
+    // Check if user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "User already exists" });
+    }
+
+    // Hash the password and save the user
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = new User({ name, email, password: hashedPassword });
+    await user.save();
+
+    // Generate a JWT token for authentication
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+
+    res.status(200).json({ token });
+  } catch (error) {
+    console.error("Signup Error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+Example: Create Todo
+Code in controllers/todoController.js:
+
+javascript
+Copy code
+// Controller to create a new todo
+const createTodo = async (req, res) => {
+  try {
+    // Extract todo details and user ID
+    const { title, description, status, dueDate } = req.body;
+    const userId = req.user.id;
+
+    // Create and save the todo
+    const todo = new Todo({
+      title,
+      description,
+      status,
+      dueDate,
+      user: userId,
+    });
+
+    await todo.save();
+    res.status(200).json({ msg: "todo created", todo });
+  } catch (error) {
+    console.error("Todo Creation Error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+9. Common Issues and Solutions
+Issue: Missing Token Error
+Cause: Authorization header is not provided or token is invalid.
+Solution: Ensure that the Authorization header is set as Bearer <token>.
+Issue: Database Connection Fails
+Cause: Incorrect DATABASE_URL in .env.
+Solution: Verify the MongoDB connection string.
