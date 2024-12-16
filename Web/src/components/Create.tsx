@@ -27,7 +27,7 @@ function Create() {
     setLoading(true);
     setError("");
     try {
-      await axios.post("http://localhost:3002/create", todoData, {
+      await axios.post("https://todo-app-d8u6.onrender.com/create", todoData, {
         headers: {
           Authorization: localStorage.getItem("token"),
         },

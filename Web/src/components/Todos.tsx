@@ -141,7 +141,7 @@ const TodoList: React.FC = () => {
 
   const fetchTodos = async () => {
     try {
-      const response = await axios.get("http://localhost:3002/todos", {
+      const response = await axios.get("https://todo-app-d8u6.onrender.com/todos", {
         headers: {
           Authorization: localStorage.getItem("token"),
         },
@@ -156,7 +156,7 @@ const TodoList: React.FC = () => {
 
   const handleEdit = async (id: string, updatedTodo: TodoData) => {
     try {
-      await axios.put(`http://localhost:3002/todos/${id}`, updatedTodo, {
+      await axios.put(`https://todo-app-d8u6.onrender.com/todos/${id}`, updatedTodo, {
         headers: { Authorization: localStorage.getItem("token") },
       });
       setTodos((prevTodos) =>
@@ -169,7 +169,7 @@ const TodoList: React.FC = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      await axios.delete(`http://localhost:3002/todos/${id}`, {
+      await axios.delete(`https://todo-app-d8u6.onrender.com/todos/${id}`, {
         headers: { Authorization: localStorage.getItem("token") },
       });
       setTodos((prevTodos) => prevTodos.filter((todo) => todo._id !== id));
