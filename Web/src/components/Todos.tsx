@@ -3,6 +3,8 @@ import axios from "axios";
 import Navbar from "./Navbar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface TodoProps {
   id: string;
@@ -135,35 +137,52 @@ const TodoList: React.FC = () => {
   const [todos, setTodos] = useState<TodoData[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // State for sorting and filtering
+  const [sortBy, setSortBy] = useState<string>("dueDate");
+  const [order, setOrder] = useState<string>("asc");
+  const [filterStatus, setFilterStatus] = useState<string>("");
+
   useEffect(() => {
     fetchTodos();
-  }, []);
+  }, [sortBy, order, filterStatus]); // Re-fetch todos when these values change
 
   const fetchTodos = async () => {
     try {
-      const response = await axios.get("https://todo-app-d8u6.onrender.com/todos", {
-        headers: {
-          Authorization: localStorage.getItem("token"),
-        },
-      });
+      setLoading(true);
+      const response = await axios.get(
+        `https://todo-app-d8u6.onrender.com/todos?sortBy=${sortBy}&order=${order}&status=${filterStatus}`,
+        {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        }
+      );
       setTodos(response.data.todos);
-      setLoading(false);
+      toast.success("Todos loaded successfully!");
     } catch (err) {
       console.error("Failed to fetch todos:", err);
+      toast.error("Failed to load todos!");
+    } finally {
       setLoading(false);
     }
   };
 
   const handleEdit = async (id: string, updatedTodo: TodoData) => {
     try {
-      await axios.put(`https://todo-app-d8u6.onrender.com/todos/${id}`, updatedTodo, {
-        headers: { Authorization: localStorage.getItem("token") },
-      });
+      await axios.put(
+        `https://todo-app-d8u6.onrender.com/todos/${id}`,
+        updatedTodo,
+        {
+          headers: { Authorization: localStorage.getItem("token") },
+        }
+      );
       setTodos((prevTodos) =>
         prevTodos.map((todo) => (todo._id === id ? updatedTodo : todo))
       );
+      toast.success("Todo updated successfully!");
     } catch (err) {
       console.error("Failed to update todo:", err);
+      toast.error("Failed to update todo!");
     }
   };
 
@@ -173,8 +192,10 @@ const TodoList: React.FC = () => {
         headers: { Authorization: localStorage.getItem("token") },
       });
       setTodos((prevTodos) => prevTodos.filter((todo) => todo._id !== id));
+      toast.success("Todo deleted successfully!");
     } catch (err) {
       console.error("Failed to delete todo:", err);
+      toast.error("Failed to delete todo!");
     }
   };
 
@@ -186,9 +207,50 @@ const TodoList: React.FC = () => {
     <>
       <Navbar />
       <div className="container mx-auto px-4 py-8">
+        <ToastContainer />
         <h2 className="text-4xl flex justify-center font-extrabold mb-8">
           Your Todos
         </h2>
+
+        {/* Sorting and Filtering UI */}
+        <div className="flex justify-between items-center mb-6">
+          <div>
+            <label className="mr-2 font-semibold">Sort By:</label>
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="border p-1 rounded"
+            >
+              <option value="dueDate">Due Date</option>
+              <option value="title">Title</option>
+              <option value="status">Status</option>
+            </select>
+          </div>
+          <div>
+            <label className="mr-2 font-semibold">Order:</label>
+            <select
+              value={order}
+              onChange={(e) => setOrder(e.target.value)}
+              className="border p-1 rounded"
+            >
+              <option value="asc">Ascending</option>
+              <option value="desc">Descending</option>
+            </select>
+          </div>
+          <div>
+            <label className="mr-2 font-semibold">Filter by Status:</label>
+            <select
+              value={filterStatus}
+              onChange={(e) => setFilterStatus(e.target.value)}
+              className="border p-1 rounded"
+            >
+              <option value="">All</option>
+              <option value="true">Completed</option>
+              <option value="false">Incomplete</option>
+            </select>
+          </div>
+        </div>
+
         {todos.length === 0 ? (
           <p className="text-gray-500">No todos found. Start adding some!</p>
         ) : (

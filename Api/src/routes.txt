@@ -9,13 +9,13 @@ import cors from "cors";
 app.use(express.json());
 app.use(cors());
 
-// User Signup
 app.post("/signup", async (req, res) => {
   const userDetail = req.body;
   const parsedUser = await createUser.safeParse(userDetail);
 
   if (!parsedUser.success) {
     res.status(400).json({ error: "Invalid user details" });
+
     return;
   }
 
@@ -23,6 +23,7 @@ app.post("/signup", async (req, res) => {
 
   if (existingUser) {
     res.status(400).json({ error: "Email already in use" });
+
     return;
   }
 
@@ -44,21 +45,22 @@ app.post("/signup", async (req, res) => {
   });
 });
 
-// User Signin
 app.post("/signin", async (req, res) => {
   const userDetail = req.body;
   const parsedUser = await userLogin.safeParse(userDetail);
 
   if (!parsedUser.success) {
     res.status(400).json({ error: "Invalid user details" });
+
     return;
   }
 
-  const USER = await user.findOne({ email: userDetail.email });
+  const USER = await user.findOne({
+    email: userDetail.email,
+  });
 
   if (!USER) {
     res.status(400).json({ msg: "User with this email not found" });
-    return;
   }
 
   const isValidPassword = await bcrypt.compare(
@@ -68,18 +70,18 @@ app.post("/signin", async (req, res) => {
 
   if (!isValidPassword) {
     res.status(400).json({ msg: "Invalid Password" });
-    return;
   }
 
-  const token = jwt.sign({ userId: USER._id }, process.env.JWT || "");
-  res.json({
-    msg: "User Logged In",
-    userId: USER._id,
-    token: token,
-  });
+  if (USER) {
+    const token = jwt.sign({ userId: USER._id }, process.env.JWT || "");
+    res.json({
+      msg: "User Logged In",
+      userId: USER._id,
+      token: token,
+    });
+  }
 });
 
-// Create Todo
 app.post("/create", async (req, res) => {
   try {
     const todoDetail = req.body;
@@ -91,6 +93,7 @@ app.post("/create", async (req, res) => {
     }
 
     const token = req.headers.authorization;
+
     if (!token) {
       res.status(401).json({ error: "Authorization token missing" });
       return;
@@ -108,7 +111,7 @@ app.post("/create", async (req, res) => {
     });
 
     res.json({
-      notification: "Todo successfully created!",
+      msg: "todo created",
       todo: newTodo,
     });
   } catch (e) {
@@ -116,10 +119,10 @@ app.post("/create", async (req, res) => {
   }
 });
 
-// Get Todos with Sorting and Filtering
 app.get("/todos", async (req, res) => {
   try {
     const token = req.headers.authorization;
+
     if (!token) {
       res.status(401).json({ error: "Authorization token missing" });
       return;
@@ -132,20 +135,7 @@ app.get("/todos", async (req, res) => {
       res.status(401).json({ error: "Invalid Token" });
       return;
     }
-
-    const { sortBy, order, status } = req.query;
-    let filter = { userId };
-
-    if (status) {
-      filter.status = status;
-    }
-
-    let sort = {};
-    if (sortBy) {
-      sort[sortBy] = order === "desc" ? -1 : 1;
-    }
-
-    const userTodos = await todo.find(filter).sort(sort);
+    const userTodos = await todo.find({ userId: userId });
 
     res.json({
       todos: userTodos,
@@ -158,14 +148,13 @@ app.get("/todos", async (req, res) => {
   }
 });
 
-// Update Todo
 app.put("/todos/:id", async (req, res) => {
   try {
     const todoId = req.params.id;
     const data = req.body;
     const parsedUpdatedTodo = await createTodo.safeParse(data);
 
-    if (!parsedUpdatedTodo.success) {
+    if (!parsedUpdatedTodo) {
       res.status(400).json({ error: "Invalid request body" });
       return;
     }
@@ -192,19 +181,17 @@ app.put("/todos/:id", async (req, res) => {
         error: "Error Updating the todo",
         todo: updatedTodo,
       });
-      return;
     }
 
     res.status(200).json({
-      notification: "Todo updated successfully!",
-      todo: updatedTodo,
+      message: "Todo Updated Successfully",
     });
+    return;
   } catch (e) {
     console.log(e);
   }
 });
 
-// Delete Todo
 app.delete(`/todos/:id`, async (req, res) => {
   try {
     const todoId = req.params.id;
@@ -216,7 +203,7 @@ app.delete(`/todos/:id`, async (req, res) => {
     }
 
     res.json({
-      notification: "Todo deleted successfully!",
+      message: "Todo deleted successfully",
     });
   } catch (e) {
     console.log(e);
@@ -225,5 +212,5 @@ app.delete(`/todos/:id`, async (req, res) => {
 
 const port = 3002;
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+  console.log(`port is running on port ${port}`);
 });

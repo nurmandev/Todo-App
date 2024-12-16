@@ -48,6 +48,8 @@ require("dotenv").config();
 const cors_1 = __importDefault(require("cors"));
 app.use(express_1.default.json());
 app.use((0, cors_1.default)());
+
+// User Signup
 app.post("/signup", (req, res) =>
   __awaiter(void 0, void 0, void 0, function* () {
     const userDetail = req.body;
@@ -79,6 +81,8 @@ app.post("/signup", (req, res) =>
     });
   })
 );
+
+// User Signin
 app.post("/signin", (req, res) =>
   __awaiter(void 0, void 0, void 0, function* () {
     const userDetail = req.body;
@@ -113,6 +117,8 @@ app.post("/signin", (req, res) =>
     }
   })
 );
+
+// Create Todo
 app.post("/create", (req, res) =>
   __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -140,7 +146,7 @@ app.post("/create", (req, res) =>
         dueDate: todoDetail.dueDate,
       });
       res.json({
-        msg: "todo created",
+        msg: "Todo successfully created!",
         todo: newTodo,
       });
     } catch (e) {
@@ -148,35 +154,43 @@ app.post("/create", (req, res) =>
     }
   })
 );
-app.get("/todos", (req, res) =>
-  __awaiter(void 0, void 0, void 0, function* () {
-    try {
-      const token = req.headers.authorization;
-      if (!token) {
-        res.status(401).json({ error: "Authorization token missing" });
-        return;
-      }
-      const decoded = jsonwebtoken_1.default.verify(
-        token,
-        process.env.JWT || ""
-      );
-      const userId = decoded.userId;
-      if (!userId) {
-        res.status(401).json({ error: "Invalid Token" });
-        return;
-      }
-      const userTodos = yield todo.find({ userId: userId });
-      res.json({
-        todos: userTodos,
-      });
-    } catch (e) {
-      console.log(e);
-      res.json({
-        error: "Error fetching todos",
-      });
+
+// Get Todos with Sorting and Filtering
+app.get("/todos", async (req, res) => {
+  try {
+    const token = req.headers.authorization;
+    if (!token) {
+      return res.status(401).json({ error: "Authorization token missing" });
     }
-  })
-);
+
+    const decoded = jsonwebtoken.verify(token, process.env.JWT || "");
+    const userId = decoded.userId;
+
+    if (!userId) {
+      return res.status(401).json({ error: "Invalid Token" });
+    }
+
+    // Extract query parameters for sorting and filtering
+    const { sortBy = "dueDate", order = "asc", status = "" } = req.query;
+
+    const sortOrder = order === "desc" ? -1 : 1;
+    const filter = { userId };
+
+    // Add status filter only if provided
+    if (status === "true" || status === "false") {
+      filter.status = status === "true";
+    }
+
+    // Sorting logic
+    const userTodos = await todo.find(filter).sort({ [sortBy]: sortOrder });
+
+    res.json({ todos: userTodos });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: "Error fetching todos" });
+  }
+});
+
 app.put("/todos/:id", (req, res) =>
   __awaiter(void 0, void 0, void 0, function* () {
     try {
