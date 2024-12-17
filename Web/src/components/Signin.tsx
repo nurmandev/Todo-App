@@ -37,17 +37,19 @@ function Signin() {
       });
 
       setTimeout(() => navigate("/todos"), 3000); // Redirect after 3 seconds
-    } catch (e) {
+    } catch (e: unknown) {
       console.error(e);
 
-      // Error Toast Notification
-      const errorMsg =
-        e.response?.data?.message ||
-        "Login failed. Please check your credentials.";
-      toast.error(errorMsg, {
-        position: "top-center",
-        autoClose: 3000,
-      });
+      // Type assertion to AxiosError to access the response
+      if (axios.isAxiosError(e)) {
+        const errorMsg =
+          e.response?.data?.message ||
+          "Login failed. Please check your credentials.";
+        toast.error(errorMsg, {
+          position: "top-center",
+          autoClose: 3000,
+        });
+      }
     }
   }
 

@@ -35,16 +35,23 @@ function Signup() {
       });
 
       setTimeout(() => navigate("/todos"), 3000); // Redirect after 3 seconds
-    } catch (e) {
+    } catch (e: unknown) {
       console.error(e);
 
-      // Show error toast notification
-      const errorMsg =
-        e.response?.data?.message || "Signup failed. Please try again.";
-      toast.error(errorMsg, {
-        position: "top-center",
-        autoClose: 3000,
-      });
+      // Type assertion to AxiosError to access the response
+      if (axios.isAxiosError(e)) {
+        const errorMsg =
+          e.response?.data?.message || "Signup failed. Please try again.";
+        toast.error(errorMsg, {
+          position: "top-center",
+          autoClose: 3000,
+        });
+      } else {
+        toast.error("An unknown error occurred. Please try again.", {
+          position: "top-center",
+          autoClose: 3000,
+        });
+      }
     }
   }
 
