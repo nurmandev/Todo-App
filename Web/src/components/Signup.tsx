@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
-import s from "../assets/1.jpg";
 import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
+import s from "../assets/1.jpg";
 
 function Signup() {
   const [showPassword, setShowPassword] = useState(false);
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
+  const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
   const [postInputs, setPostInputs] = useState({
     name: "",
@@ -27,14 +27,32 @@ function Signup() {
 
       const jwtToken = response.data.token;
       localStorage.setItem("token", jwtToken);
-      navigate("/todos");
+
+      // Show success toast notification
+      toast.success("Signup successful! Redirecting...", {
+        position: "top-center",
+        autoClose: 3000,
+      });
+
+      setTimeout(() => navigate("/todos"), 3000); // Redirect after 3 seconds
     } catch (e) {
-      console.log(e);
+      console.error(e);
+
+      // Show error toast notification
+      const errorMsg =
+        e.response?.data?.message || "Signup failed. Please try again.";
+      toast.error(errorMsg, {
+        position: "top-center",
+        autoClose: 3000,
+      });
     }
   }
 
   return (
     <div className="flex items-center justify-center min-h-screen px-4 sm:px-8 bg-gray-100">
+      {/* Toast Container */}
+      <ToastContainer />
+
       <div className="flex flex-col sm:flex-row w-full max-w-4xl bg-white rounded-lg shadow-lg overflow-hidden">
         {/* Left Section */}
         <div className="flex flex-col items-center w-full sm:w-1/2 p-6 sm:p-8">

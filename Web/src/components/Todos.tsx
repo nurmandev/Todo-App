@@ -6,34 +6,30 @@ import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-interface TodoProps {
-  id: string;
+// Type for Todo data
+interface TodoData {
+  _id: string;
   title: string;
   description: string;
   status: boolean;
   dueDate: string;
-  onEdit: (id: string, updatedTodo: TodoData) => void;
-  onDelete: (id: string) => void;
 }
 
-const Todo: React.FC<TodoProps> = ({
-  id,
-  title,
-  description,
-  status,
-  dueDate,
-  onEdit,
-  onDelete,
-}) => {
+// Todo component
+const Todo: React.FC<{
+  todo: TodoData;
+  onEdit: (id: string, updatedTodo: TodoData) => void;
+  onDelete: (id: string) => void;
+}> = ({ todo, onEdit, onDelete }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [editedTitle, setEditedTitle] = useState(title);
-  const [editedDescription, setEditedDescription] = useState(description);
-  const [editedStatus, setEditedStatus] = useState(status);
-  const [editedDueDate, setEditedDueDate] = useState(dueDate);
+  const [editedTitle, setEditedTitle] = useState(todo.title);
+  const [editedDescription, setEditedDescription] = useState(todo.description);
+  const [editedStatus, setEditedStatus] = useState(todo.status);
+  const [editedDueDate, setEditedDueDate] = useState(todo.dueDate);
 
   const handleEdit = () => {
-    onEdit(id, {
-      _id: id,
+    onEdit(todo._id, {
+      ...todo,
       title: editedTitle,
       description: editedDescription,
       status: editedStatus,
@@ -43,7 +39,7 @@ const Todo: React.FC<TodoProps> = ({
   };
 
   return (
-    <div className="bg-white shadow-md rounded-lg p-4 h-auto flex flex-col relative">
+    <div className="bg-white shadow-md rounded-lg p-4 flex flex-col relative">
       {isEditing ? (
         <>
           <input
@@ -96,18 +92,16 @@ const Todo: React.FC<TodoProps> = ({
         </>
       ) : (
         <>
-          <h3 className="text-lg font-semibold mb-2 flex-shrink-0">{title}</h3>
-          <p className="text-gray-600 overflow-auto flex-grow mb-2">
-            {description}
-          </p>
+          <h3 className="text-lg font-semibold mb-2">{todo.title}</h3>
+          <p className="text-gray-600 mb-2">{todo.description}</p>
           <p
             className={`text-sm font-medium mb-2 ${
-              status ? "text-green-500" : "text-red-500"
+              todo.status ? "text-green-500" : "text-red-500"
             }`}
           >
-            Status: {status ? "Completed" : "Incomplete"}
+            Status: {todo.status ? "Completed" : "Incomplete"}
           </p>
-          <p className="text-sm text-gray-500">Due Date: {dueDate}</p>
+          <p className="text-sm text-gray-500">Due Date: {todo.dueDate}</p>
           <div className="absolute top-2 right-2">
             <button
               onClick={() => setIsEditing(true)}
@@ -115,7 +109,7 @@ const Todo: React.FC<TodoProps> = ({
             >
               <FontAwesomeIcon icon={faEdit} />
             </button>
-            <button onClick={() => onDelete(id)} className="text-red-500">
+            <button onClick={() => onDelete(todo._id)} className="text-red-500">
               <FontAwesomeIcon icon={faTrash} />
             </button>
           </div>
@@ -125,42 +119,33 @@ const Todo: React.FC<TodoProps> = ({
   );
 };
 
-interface TodoData {
-  _id: string;
-  title: string;
-  description: string;
-  status: boolean;
-  dueDate: string;
-}
-
+// Main Todo List Component
 const TodoList: React.FC = () => {
   const [todos, setTodos] = useState<TodoData[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // State for sorting and filtering
   const [sortBy, setSortBy] = useState<string>("dueDate");
   const [order, setOrder] = useState<string>("asc");
   const [filterStatus, setFilterStatus] = useState<string>("");
 
   useEffect(() => {
     fetchTodos();
-  }, [sortBy, order, filterStatus]); // Re-fetch todos when these values change
+  }, [sortBy, order, filterStatus]);
 
   const fetchTodos = async () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `https://todo-app-d8u6.onrender.com/todos?sortBy=${sortBy}&order=${order}&status=${filterStatus}`,
+        `https://todo-app-d8u6.onrender.com/todos`,
         {
-          headers: {
-            Authorization: localStorage.getItem("token"),
-          },
+          headers: { Authorization: localStorage.getItem("token") },
+          params: { sortBy, order, status: filterStatus },
         }
       );
       setTodos(response.data.todos);
       toast.success("Todos loaded successfully!");
     } catch (err) {
-      console.error("Failed to fetch todos:", err);
+      console.error("Error fetching todos:", err);
       toast.error("Failed to load todos!");
     } finally {
       setLoading(false);
@@ -181,7 +166,7 @@ const TodoList: React.FC = () => {
       );
       toast.success("Todo updated successfully!");
     } catch (err) {
-      console.error("Failed to update todo:", err);
+      console.error("Error updating todo:", err);
       toast.error("Failed to update todo!");
     }
   };
@@ -194,7 +179,7 @@ const TodoList: React.FC = () => {
       setTodos((prevTodos) => prevTodos.filter((todo) => todo._id !== id));
       toast.success("Todo deleted successfully!");
     } catch (err) {
-      console.error("Failed to delete todo:", err);
+      console.error("Error deleting todo:", err);
       toast.error("Failed to delete todo!");
     }
   };
@@ -208,11 +193,9 @@ const TodoList: React.FC = () => {
       <Navbar />
       <div className="container mx-auto px-4 py-8">
         <ToastContainer />
-        <h2 className="text-4xl flex justify-center font-extrabold mb-8">
-          Your Todos
-        </h2>
+        <h2 className="text-4xl text-center font-extrabold mb-8">Your Todos</h2>
 
-        {/* Sorting and Filtering UI */}
+        {/* Sorting and Filtering */}
         <div className="flex justify-between items-center mb-6">
           <div>
             <label className="mr-2 font-semibold">Sort By:</label>
@@ -252,17 +235,15 @@ const TodoList: React.FC = () => {
         </div>
 
         {todos.length === 0 ? (
-          <p className="text-gray-500">No todos found. Start adding some!</p>
+          <p className="text-gray-500 text-center">
+            No todos found. Start adding some!
+          </p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {todos.map((todo) => (
               <Todo
                 key={todo._id}
-                id={todo._id}
-                title={todo.title}
-                description={todo.description}
-                status={todo.status}
-                dueDate={todo.dueDate}
+                todo={todo}
                 onEdit={handleEdit}
                 onDelete={handleDelete}
               />
