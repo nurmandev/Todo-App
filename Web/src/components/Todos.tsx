@@ -119,8 +119,6 @@ const Todo: React.FC<{
   );
 };
 
-
-
 // Main Todo List Component
 const TodoList: React.FC = () => {
   const [todos, setTodos] = useState<TodoData[]>([]);
@@ -129,6 +127,8 @@ const TodoList: React.FC = () => {
   const [sortBy, setSortBy] = useState<string>("dueDate");
   const [order, setOrder] = useState<string>("asc");
   const [filterStatus, setFilterStatus] = useState<string>("");
+
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     fetchTodos();
@@ -140,7 +140,7 @@ const TodoList: React.FC = () => {
       const response = await axios.get(
         `https://todo-app-d8u6.onrender.com/todos`,
         {
-          headers: { Authorization: localStorage.getItem("token") },
+          headers: { Authorization: token },
           params: { sortBy, order, status: filterStatus },
         }
       );
@@ -160,7 +160,7 @@ const TodoList: React.FC = () => {
         `https://todo-app-d8u6.onrender.com/todos/${id}`,
         updatedTodo,
         {
-          headers: { Authorization: localStorage.getItem("token") },
+          headers: { Authorization: token },
         }
       );
       setTodos((prevTodos) =>
@@ -176,7 +176,7 @@ const TodoList: React.FC = () => {
   const handleDelete = async (id: string) => {
     try {
       await axios.delete(`https://todo-app-d8u6.onrender.com/todos/${id}`, {
-        headers: { Authorization: localStorage.getItem("token") },
+        headers: { Authorization: token },
       });
       setTodos((prevTodos) => prevTodos.filter((todo) => todo._id !== id));
       toast.success("Todo deleted successfully!");
