@@ -156,40 +156,81 @@ app.post("/create", (req, res) =>
 );
 
 // Get Todos with Sorting and Filtering
-app.get("/todos", async (req, res) => {
-  try {
-    const token = req.headers.authorization;
-    if (!token) {
-      return res.status(401).json({ error: "Authorization token missing" });
+app.get("/todos", (req, res) =>
+  __awaiter(void 0, void 0, void 0, function* () {
+    try {
+      const token = req.headers.authorization;
+      if (!token) {
+        res.status(401).json({ error: "Authorization token missing" });
+        return;
+      }
+      const decoded = jsonwebtoken_1.default.verify(
+        token,
+        process.env.JWT || ""
+      );
+      const userId = decoded.userId;
+      if (!userId) {
+        res.status(401).json({ error: "Invalid Token" });
+        return;
+      }
+
+      // Extract query parameters for sorting and filtering
+      const { sortBy = "dueDate", order = "asc", status = "" } = req.query;
+
+      const sortOrder = order === "desc" ? -1 : 1;
+      const filter = { userId };
+
+      // Add status filter only if provided
+      if (status === "true" || status === "false") {
+        filter.status = status === "true";
+      }
+      // Sorting logic
+      const userTodos = yield todo.find(filter).sort({ [sortBy]: sortOrder });
+      res.json({
+        todos: userTodos,
+      });
+    } catch (e) {
+      console.log(e);
+      res.json({
+        error: "Error fetching todos",
+      });
     }
+  })
+);
+// app.get("/todos", async (req, res) => {
+//   try {
+//     const token = req.headers.authorization;
+//     if (!token) {
+//       return res.status(401).json({ error: "Authorization token missing" });
+//     }
 
-    const decoded = jsonwebtoken.verify(token, process.env.JWT || "");
-    const userId = decoded.userId;
+//     const decoded = jsonwebtoken.verify(token, process.env.JWT || "");
+//     const userId = decoded.userId;
 
-    if (!userId) {
-      return res.status(401).json({ error: "Invalid Token" });
-    }
+//     if (!userId) {
+//       return res.status(401).json({ error: "Invalid Token" });
+//     }
 
-    // Extract query parameters for sorting and filtering
-    const { sortBy = "dueDate", order = "asc", status = "" } = req.query;
+//     // Extract query parameters for sorting and filtering
+//     const { sortBy = "dueDate", order = "asc", status = "" } = req.query;
 
-    const sortOrder = order === "desc" ? -1 : 1;
-    const filter = { userId };
+//     const sortOrder = order === "desc" ? -1 : 1;
+//     const filter = { userId };
 
-    // Add status filter only if provided
-    if (status === "true" || status === "false") {
-      filter.status = status === "true";
-    }
+//     // Add status filter only if provided
+//     if (status === "true" || status === "false") {
+//       filter.status = status === "true";
+//     }
 
-    // Sorting logic
-    const userTodos = await todo.find(filter).sort({ [sortBy]: sortOrder });
+//     // Sorting logic
+//     const userTodos = await todo.find(filter).sort({ [sortBy]: sortOrder });
 
-    res.json({ todos: userTodos });
-  } catch (e) {
-    console.error(e);
-    res.status(500).json({ error: "Error fetching todos" });
-  }
-});
+//     res.json({ todos: userTodos });
+//   } catch (e) {
+//     console.error(e);
+//     res.status(500).json({ error: "Error fetching todos" });
+//   }
+// });
 
 app.put("/todos/:id", (req, res) =>
   __awaiter(void 0, void 0, void 0, function* () {
