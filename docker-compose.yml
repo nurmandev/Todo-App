@@ -1,0 +1,48 @@
+version: "3.8"
+
+services:
+  mysql:
+    image: mysql:latest
+    container_name: todoMySQL
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: todoDB
+      MYSQL_USER: user
+      MYSQL_PASSWORD: userpassword
+    volumes:
+      - mysqlV:/var/lib/mysql
+    restart: always
+
+  backend:
+    build:
+      context: ./api
+    ports:
+      - "3002:3002"
+    environment:
+      DB_HOST: todoMySQL
+      DB_USERNAME: user
+      DB_PASSWORD: userpassword
+      DB_PORT: 3306
+      DB_NAME: todoDB
+      SECRET_KEY: your-secret-key
+      EXPIRE_TIME: 3600
+      EMAIL_ADDRESS: your-email@example.com
+      EMAIL_PASSWORD: your-email-password
+      PORT: 3002
+    depends_on:
+      - mysql
+    restart: always
+
+  frontend:
+    build:
+      context: ./web
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+    restart: always
+
+volumes:
+  mysqlV:
