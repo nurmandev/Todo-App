@@ -21,7 +21,7 @@ function Signup() {
   async function signupReq() {
     try {
       const response = await axios.post(
-        "https://todo-app-d8u6.onrender.com/signup",
+        "http://localhost:8000/api/v1/auth/register",
         postInputs
       );
 

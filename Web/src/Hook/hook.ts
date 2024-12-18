@@ -9,7 +9,7 @@ export const getReq = () => {
 
   useEffect(() => {
     axios
-      .get("https://todo-app-d8u6.onrender.com/todos", {
+      .get("http://localhost:8000/api/v1/todos", {
         headers: {
           Authorization: localStorage.getItem("token"),
         },
@@ -26,6 +26,6 @@ export const getReq = () => {
     title,
     description,
     status,
-    dueDate
+    dueDate,
   };
 };

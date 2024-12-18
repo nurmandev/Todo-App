@@ -8,7 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 // Type for Todo data
 interface TodoData {
-  _id: string;
+  todoid: string;
   title: string;
   description: string;
   status: boolean;
@@ -28,7 +28,7 @@ const Todo: React.FC<{
   const [editedDueDate, setEditedDueDate] = useState(todo.dueDate);
 
   const handleEdit = () => {
-    onEdit(todo._id, {
+    onEdit(todo.todoid, {
       ...todo,
       title: editedTitle,
       description: editedDescription,
@@ -109,7 +109,10 @@ const Todo: React.FC<{
             >
               <FontAwesomeIcon icon={faEdit} />
             </button>
-            <button onClick={() => onDelete(todo._id)} className="text-red-500">
+            <button
+              onClick={() => onDelete(todo.todoid)}
+              className="text-red-500"
+            >
               <FontAwesomeIcon icon={faTrash} />
             </button>
           </div>
@@ -135,16 +138,14 @@ const TodoList: React.FC = () => {
   }, [sortBy, order, filterStatus]);
 
   const fetchTodos = async () => {
+    console.log("token", token);
     try {
       setLoading(true);
-      const response = await axios.get(
-        `https://todo-app-d8u6.onrender.com/todos`,
-        {
-          headers: { Authorization: token },
-          params: { sortBy, order, status: filterStatus },
-        }
-      );
-      setTodos(response.data.todos);
+      const response = await axios.get(`http://localhost:8000/api/v1/todos`, {
+        headers: { Authorization: token },
+        params: { sortBy, order, status: filterStatus },
+      });
+      setTodos(response.data);
       toast.success("Todos loaded successfully!");
     } catch (err) {
       console.error("Error fetching todos:", err);
@@ -156,15 +157,11 @@ const TodoList: React.FC = () => {
 
   const handleEdit = async (id: string, updatedTodo: TodoData) => {
     try {
-      await axios.put(
-        `https://todo-app-d8u6.onrender.com/todos/${id}`,
-        updatedTodo,
-        {
-          headers: { Authorization: token },
-        }
-      );
+      await axios.put(`http://localhost:8000/api/v1/todos/${id}`, updatedTodo, {
+        headers: { Authorization: token },
+      });
       setTodos((prevTodos) =>
-        prevTodos.map((todo) => (todo._id === id ? updatedTodo : todo))
+        prevTodos.map((todo) => (todo.todoid === id ? updatedTodo : todo))
       );
       toast.success("Todo updated successfully!");
     } catch (err) {
@@ -175,10 +172,10 @@ const TodoList: React.FC = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      await axios.delete(`https://todo-app-d8u6.onrender.com/todos/${id}`, {
+      await axios.delete(`http://localhost:8000/api/v1/todos/${id}`, {
         headers: { Authorization: token },
       });
-      setTodos((prevTodos) => prevTodos.filter((todo) => todo._id !== id));
+      setTodos((prevTodos) => prevTodos.filter((todo) => todo.todoid !== id));
       toast.success("Todo deleted successfully!");
     } catch (err) {
       console.error("Error deleting todo:", err);
@@ -244,7 +241,7 @@ const TodoList: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {todos.map((todo) => (
               <Todo
-                key={todo._id}
+                key={todo.todoid}
                 todo={todo}
                 onEdit={handleEdit}
                 onDelete={handleDelete}

@@ -20,10 +20,10 @@ function Signin() {
   async function signinReq() {
     try {
       const response = await axios.post(
-        `https://todo-app-d8u6.onrender.com/signin`,
+        `http://localhost:8000/api/v1/auth/login`,
         postInputs
       );
-
+      console.log(response);
       const jwtToken = response.data.token;
       localStorage.setItem("token", jwtToken);
 
