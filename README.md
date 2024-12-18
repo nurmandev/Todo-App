@@ -1,4 +1,4 @@
-# FullStack-Todo-MERN-Application-with-DOCKER
+# Todo-with-DOCKER
 
 This is a **Full-Stack Todo Application** built using the MERN stack (MongoDB, Express, React, Node.js). The application is fully containerized using Docker and includes features like user authentication, creating, updating, and deleting todos. The backend is written in TypeScript, and the frontend is built with React.
 
