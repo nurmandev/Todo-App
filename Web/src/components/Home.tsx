@@ -9,7 +9,7 @@ const Home = () => {
   return (
     <div className="min-h-screen">
       <Navbar />
-      <div className="bg-white">
+      <div className="">
         <div className="container mx-auto px-4 py-16">
           <div className="flex flex-col lg:flex-row items-center">
             {/* Left column */}

@@ -48,7 +48,7 @@ function Create() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4 relative">
+    <div className="min-h-screen p-4 relative">
       <button
         className="absolute left-4 top-4 p-2 px-4 bg-red-500 text-white rounded text-lg font-bold"
         onClick={goBack}
@@ -56,7 +56,7 @@ function Create() {
         Back
       </button>
       <div className="flex items-center justify-center min-h-screen">
-        <div className="max-w-2xl w-full bg-white rounded-xl shadow-md overflow-hidden">
+        <div className="max-w-2xl w-full rounded-xl shadow-md overflow-hidden">
           <div className="p-8">
             <h2 className="text-4xl font-extrabold text-center text-red-500 mb-6">
               Create New Todo

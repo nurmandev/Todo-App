@@ -39,14 +39,14 @@ const Todo: React.FC<{
   };
 
   return (
-    <div className="bg-white shadow-md rounded-lg p-4 flex flex-col relative">
+    <div className="bg- shadow-md rounded-lg p-4 flex flex-col relative">
       {isEditing ? (
         <>
           <input
             type="text"
             value={editedTitle}
             onChange={(e) => setEditedTitle(e.target.value)}
-            className="text-lg font-semibold mb-2 p-1 border rounded"
+            className="text-lg font-semibold mb-2 p-1 border rounded bg-transparent"
             placeholder="Edit title"
           />
           <textarea
@@ -72,7 +72,7 @@ const Todo: React.FC<{
               type="date"
               value={editedDueDate}
               onChange={(e) => setEditedDueDate(e.target.value)}
-              className="ml-2 border p-1 rounded"
+              className="ml-2 border p-1 rounded bg-transparent"
             />
           </label>
           <div className="mt-4">

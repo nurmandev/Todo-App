@@ -56,11 +56,11 @@ function Signup() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen px-4 sm:px-8 bg-gray-100">
+    <div className="flex items-center justify-center min-h-screen px-4 sm:px-8 ">
       {/* Toast Container */}
       <ToastContainer />
 
-      <div className="flex flex-col sm:flex-row w-full max-w-4xl bg-white rounded-lg shadow-lg overflow-hidden">
+      <div className="flex flex-col sm:flex-row w-full max-w-4xl rounded-lg shadow-lg overflow-hidden">
         {/* Left Section */}
         <div className="flex flex-col items-center w-full sm:w-1/2 p-6 sm:p-8">
           <div className="text-3xl sm:text-5xl font-extrabold text-gray-800 mb-6">

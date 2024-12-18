@@ -1,7 +1,10 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useUser } from "../context/User";
+import Switch from "./Switch";
+import { useTheme } from "../context/Theme";
 
 function Navbar() {
+  const { isDarkMode, setIsDarkMode } = useTheme();
   const { logout: handleLogout } = useUser();
   const location = useLocation();
   const navigate = useNavigate();
@@ -12,9 +15,15 @@ function Navbar() {
   };
 
   return (
-    <div className="flex flex-wrap justify-between items-center m-4 sm:m-8">
-      <div className="text-2xl sm:text-4xl font-extrabold text-red-500">
-        Todo App
+    <div className="flex flex-wrap justify-between items-center p-4 sm:p-8">
+      <div className="flex items-center gap-4">
+        <Switch
+          isChecked={isDarkMode}
+          onChange={() => setIsDarkMode(!isDarkMode)}
+        />
+        <div className="text-2xl sm:text-4xl font-extrabold text-red-500">
+          Todo App
+        </div>
       </div>
 
       {location.pathname === "/" ? (
