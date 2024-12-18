@@ -12,7 +12,7 @@ const loginHandler = async (req, res) => {
   const compare = await comparePassword(password, findUser.password);
   if (!compare) return null;
   const token = generateToken(findUser.userId);
-  res.json({ token }).status(httpStatus.ACCEPTED);
+  res.json({ token, user: findUser }).status(httpStatus.ACCEPTED);
 };
 
 export const loginController = errorHandlerWrapper(loginHandler);

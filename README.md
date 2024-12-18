@@ -1,6 +1,6 @@
-# Todo-with-DOCKER
+# Todo
 
-This is a **Full-Stack Todo Application** built using the MERN stack (MongoDB, Express, React, Node.js). The application is fully containerized using Docker and includes features like user authentication, creating, updating, and deleting todos. The backend is written in TypeScript, and the frontend is built with React.
+This is a **Full-Stack Todo Application** built using the MERN stack (MongoDB, Express, React, Node.js). The application is includes features like user authentication, creating, updating, and deleting todos. The backend is written in TypeScript, and the frontend is built with React.
 
 ## Features
 
@@ -26,12 +26,7 @@ This is a **Full-Stack Todo Application** built using the MERN stack (MongoDB, E
 - **Node.js**: JavaScript runtime.
 - **Express.js**: Backend framework.
 - **TypeScript**: Type-safe server logic.
-- **MongoDB**: NoSQL database.
-
-### DevOps:
-
-- **Docker**: Containerization for all services.
-- **Docker Compose**: Multi-container orchestration.
+- **MySQL**: SQL database.
 
 ---
 
@@ -43,44 +38,13 @@ project-root/
 |   |-- src/            # React components, hooks, etc.
 |-- api/                # Backend code
 |   |-- src/            # API routes, models, controllers, etc.
-|-- docker-compose.yml  # Multi-container setup
 |-- README.md           # Project documentation
 ```
 
 ---
 
-## Prerequisites
-
-Ensure you have the following installed:
-
-- [Docker](https://www.docker.com/) (and Docker Compose)
-- Node.js and npm (if running without Docker)
-- MongoDB (if running without Docker)
-
----
-
 ## Setup and Installation
 
-### Using Docker
-
-1. Clone the repository:
-
-   ```bash
-   git clone https://github.com/nurmandev/Todo-App
-   cd Todo-App
-   ```
-
-2. Build and start the containers:
-
-   ```bash
-   docker-compose up --build
-   ```
-
-3. Access the application:
-   - Frontend: [http://localhost:3000](http://localhost:3000)
-   - Backend: [http://localhost:5000/api](http://localhost:5000/api)
-
-### Without Docker
 
 1. Clone the repository:
 
@@ -105,7 +69,7 @@ Ensure you have the following installed:
    npm run dev
    ```
 
-4. Start MongoDB (if not running via Docker).
+4. Start MySQl (if not running via Docker).
 
 ---
 
@@ -116,43 +80,14 @@ Create `.env` files for both frontend and backend to configure environment-speci
 ### Backend `.env` example:
 
 ```env
-PORT=5000
-MONGO_URI=mongodb://mongo:27017/todo-app
-JWT_SECRET=your_secret_key
-```
-
-## Docker Compose Configuration
-
-Here is an overview of the `docker-compose.yml` configuration:
-
-```yaml
-version: "3.8"
-services:
-  backend:
-    build: ./api
-    ports:
-      - "5000:5000"
-    env_file:
-      - ./api/.env
-    depends_on:
-      - mongo
-
-  frontend:
-    build: ./web
-    ports:
-      - "3000:3000"
-    env_file:
-      - ./web/.env
-
-  mongo:
-    image: mongo
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo_data:/data/db
-
-volumes:
-  mongo_data:
-```
-
----
+  DB_HOST
+  DB_USERNAME
+  DB_PASSWORD
+  PORT
+  DB_PORT
+  DB_NAME
+  SECRET_KEY
+  EXPIRE_TIME
+  EMAIL_ADDRESS
+  EMAIL_PASSWORD
+  ```

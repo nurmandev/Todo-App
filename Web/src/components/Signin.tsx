@@ -5,8 +5,10 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useUser } from "../context/User";
 
 function Signin() {
+  const { setUser } = useUser();
   const [showPassword, setShowPassword] = useState(false);
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
@@ -26,6 +28,7 @@ function Signin() {
       console.log(response);
       const jwtToken = response.data.token;
       localStorage.setItem("token", jwtToken);
+      setUser(response.data.user);
 
       const userId = response.data.userId;
       localStorage.setItem("userId", userId);

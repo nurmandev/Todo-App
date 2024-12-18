@@ -1,11 +1,13 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useUser } from "../context/User";
 
 function Navbar() {
+  const { logout: handleLogout } = useUser();
   const location = useLocation();
   const navigate = useNavigate();
 
   const logout = () => {
-    localStorage.removeItem("token");
+    handleLogout();
     navigate("/");
   };
 
