@@ -1,34 +1,23 @@
-# First stage: Build the application
-FROM node:18-alpine AS build
+# Step 1: Use an official Node.js runtime as the base image
+FROM node:16
 
-# Set the working directory
+# Step 2: Set the working directory in the container
 WORKDIR /app
 
-# Copy package.json and package-lock.json for dependency installation
+# Step 3: Copy package.json and package-lock.json (if available)
 COPY package*.json ./
 
-# Install dependencies
-RUN npm ci
+# Step 4: Install dependencies
+RUN npm install
 
-# Copy the entire project to the container
+# Step 5: Copy the rest of your application code into the container
 COPY . .
 
-# Build the TypeScript project
-RUN npm run build
+# Step 7: Compile TypeScript code into JavaScript
+RUN tsc
 
-# Second stage: Create a lightweight runtime image
-FROM node:18-alpine
+# Step 8: Expose the port that the app runs on
+EXPOSE 8000
 
-# Set the working directory
-WORKDIR /app
-
-# Copy only the necessary files from the build stage
-COPY --from=build /app/dist /app/dist
-COPY --from=build /app/node_modules /app/node_modules
-COPY --from=build /app/package*.json /app/
-
-# Expose the application's port
-EXPOSE 3002
-
-# Command to run the application
-CMD ["node", "src/index.js"]
+# Step 9: Command to run the app (use the compiled JavaScript entry point)
+CMD ["node", "dist/index.js"]
