@@ -17,9 +17,10 @@ services:
 
   backend:
     build:
-      context: ./api
+      context: ./backend
+      dockerfile: Dockerfile
     ports:
-      - "3002:3002"
+      - "8000:8000"
     environment:
       DB_HOST: todoMySQL
       DB_USERNAME: user
@@ -30,14 +31,15 @@ services:
       EXPIRE_TIME: 3600
       EMAIL_ADDRESS: your-email@example.com
       EMAIL_PASSWORD: your-email-password
-      PORT: 3002
+      PORT: 8000
     depends_on:
       - mysql
     restart: always
 
   frontend:
     build:
-      context: ./web
+      context: ./frontend
+      dockerfile: Dockerfile
     ports:
       - "5173:80"
     depends_on:
