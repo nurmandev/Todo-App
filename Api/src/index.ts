@@ -5,28 +5,28 @@ import { appRouter } from "./routes";
 import { errorHandlerMiddleware, routeMiddleware } from "./middlewares";
 import { Env } from "./env";
 
-const setupServer = async () => {
-  await dbCreate();
+const app = express();
+// const setupServer = async () => {
+dbCreate();
 
-  await AppDataSouce.initialize();
+AppDataSouce.initialize();
 
-  const app = express();
+app.use(cors());
+app.use(express.json());
+// app.use(clientUse());
+app.use(routeMiddleware);
+app.use("/health", (_req, res) => {
+  res.json({ msg: "Hello Get Zell" });
+});
+app.use("/api/v1", appRouter);
+app.use(errorHandlerMiddleware);
 
-  app.use(cors());
-  app.use(express.json());
-  // app.use(clientUse());
-  app.use(routeMiddleware);
-  app.use("/health", (_req, res) => {
-    res.json({ msg: "Hello Get Zell" });
-  });
-  app.use("/api/v1", appRouter);
-  app.use(errorHandlerMiddleware);
+const { port } = Env;
 
-  const { port } = Env;
+app.listen(port, () => {
+  console.log(`Server is listening on ${port}.`);
+});
+// };
 
-  app.listen(port, () => {
-    console.log(`Server is listening on ${port}.`);
-  });
-};
-
-setupServer();
+// setupServer();
+export { app };

@@ -42,31 +42,23 @@ export const getAllTodos = async (): Promise<TodoEntity[]> => {
 export const getTodosByUserId = async (
   userId: string,
   filters: Partial<TodoEntity>,
-  sortField: string = "createdAt",
-  sortOrder: "ASC" | "DESC" = "ASC"
+  sortBy: string = "createdAt",
+  order: "ASC" | "DESC" = "ASC"
 ) => {
   const todoRepository = AppDataSouce.getRepository(TodoEntity);
 
   // Build the query options dynamically
   const where: FindOptionsWhere<TodoEntity> = { userId, ...filters };
 
-  if (
-    ![
-      "todoid",
-      "userId",
-      "title",
-      "description",
-      "status",
-      "dueDate",
-      "createdAt",
-    ].includes(sortField)
-  ) {
-    throw new Error(`Invalid sort field: ${sortField}`);
-  }
+  console.log({
+    [sortBy]: order.toUpperCase() === "ASC" ? "ASC" : "DESC",
+  });
 
   const options: FindManyOptions<TodoEntity> = {
     where,
-    // order: { [sortField]: sortOrder.toUpperCase() === "ASC" ? "ASC" : "DESC" },
+    order: {
+      [sortBy]: order.toUpperCase() === "ASC" ? "ASC" : "DESC",
+    },
   };
 
   // Execute the query

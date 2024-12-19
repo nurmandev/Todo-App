@@ -38,6 +38,22 @@ const Todo: React.FC<{
     setIsEditing(false);
   };
 
+  const formatDate = (dateString: string): string => {
+    const date = new Date(dateString);
+
+    const options: Intl.DateTimeFormatOptions = {
+      weekday: "long", // Day of the week (e.g., 'Monday')
+      year: "numeric", // Year (e.g., 2024)
+      month: "long", // Full month name (e.g., 'December')
+      day: "numeric", // Day of the month (e.g., 19)
+      hour: "2-digit", // Hour (e.g., 23)
+      minute: "2-digit", // Minute (e.g., 00)
+      second: "2-digit", // Second (e.g., 00)
+      timeZoneName: "short", // Time zone abbreviation (e.g., 'GMT')
+    };
+
+    return date.toLocaleString("en-US", options);
+  };
   return (
     <div className="bg- shadow-md rounded-lg p-4 flex flex-col relative">
       {isEditing ? (
@@ -101,7 +117,9 @@ const Todo: React.FC<{
           >
             Status: {todo.status ? "Completed" : "Incomplete"}
           </p>
-          <p className="text-sm text-gray-500">Due Date: {todo.dueDate}</p>
+          <p className="text-sm text-gray-500">
+            Due Date: {formatDate(todo.dueDate)}
+          </p>
           <div className="absolute top-2 right-2">
             <button
               onClick={() => setIsEditing(true)}

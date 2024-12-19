@@ -26,20 +26,18 @@ const getUserTodosHandler = async (req, res) => {
   const userId = req.user.userId;
 
   // Extract query parameters for filtering and sorting
-  const { status, title, dueDate, sortField, sortOrder } = req.query;
+  const { status, sortBy, order } = req.query;
   // Build filters dynamically
 
   const filters: any = {};
   if (status !== undefined) filters.status = status === "true"; // Convert to boolean
-  if (title) filters.title = title;
-  if (dueDate) filters.dueDate = new Date(dueDate); // Parse to Date object
 
   // Fetch todos with filters and sorting
   const todos = await todoService.getTodosByUserId(
     userId,
     filters,
-    sortField || "createdAt",
-    sortOrder || "ASC"
+    sortBy || "createdAt",
+    order || "ASC"
   );
 
   res.status(httpStatus.OK).json(todos);

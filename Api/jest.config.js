@@ -1,7 +1,7 @@
 module.exports = {
-    testEnvironment: 'node', // Ensures compatibility with Express apps
-    coverageDirectory: './coverage', // Generates a coverage report
-    collectCoverage: true,
-    setupFilesAfterEnv: ['./jest.setup.js'], // Optional for shared setup
-  };
-  
+  testEnvironment: "node",
+  setupFilesAfterEnv: ["./tests/setupTests.ts"], // Optional for global setup
+  transform: {
+    "^.+\\.tsx?$": "ts-jest", // Use ts-jest for TypeScript
+  },
+};
