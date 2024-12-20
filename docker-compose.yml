@@ -1,50 +1,46 @@
-version: "3.8"
+version: "3.9"
 
 services:
-  mysql:
-    image: mysql:latest
-    container_name: todoMySQL
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     ports:
-      - "3306:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: todoDB
-      MYSQL_USER: user
-      MYSQL_PASSWORD: userpassword
-    volumes:
-      - mysqlV:/var/lib/mysql
-    restart: always
+      - "80:80"
+    networks:
+      - app-network
 
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
     ports:
-      - "8000:8000"
+      - "5000:5000"
+    networks:
+      - app-network
     environment:
-      DB_HOST: todoMySQL
-      DB_USERNAME: user
-      DB_PASSWORD: userpassword
-      DB_PORT: 3306
-      DB_NAME: todoDB
-      SECRET_KEY: your-secret-key
-      EXPIRE_TIME: 3600
-      EMAIL_ADDRESS: your-email@example.com
-      EMAIL_PASSWORD: your-email-password
-      PORT: 8000
-    depends_on:
-      - mysql
-    restart: always
+      - DB_HOST=mysql
+      - DB_USER=root
+      - DB_PASSWORD=yourpassword
+      - DB_NAME=yourdbname
 
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    ports:
-      - "5173:80"
-    depends_on:
-      - backend
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
     restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: yourpassword
+      MYSQL_DATABASE: yourdbname
+    networks:
+      - app-network
+    volumes:
+      - db_data:/var/lib/mysql
+
+networks:
+  app-network:
+    driver: bridge
 
 volumes:
-  mysqlV:
+  db_data:
