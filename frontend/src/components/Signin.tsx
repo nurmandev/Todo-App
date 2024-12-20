@@ -2,7 +2,7 @@ import { useState } from "react";
 import s from "../assets/1.jpg";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useUser } from "../context/User";
@@ -118,12 +118,12 @@ function Signin() {
             </div>
             <div className="mt-4 text-center">
               Don't have an account?{" "}
-              <a
-                href="/signup"
+              <Link
+                to={"/signup"}
                 className="underline text-red-500 hover:text-red-600"
               >
                 Sign up
-              </a>
+              </Link>
             </div>
           </div>
         </div>

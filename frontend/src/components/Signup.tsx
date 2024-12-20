@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
@@ -138,12 +138,12 @@ function Signup() {
             </div>
             <div className="mt-4 text-center">
               Already have an account?{" "}
-              <a
-                href="/signin"
+              <Link
+                to={"/signin"}
                 className="underline text-red-500 hover:text-red-600"
               >
                 Sign in
-              </a>
+              </Link>
             </div>
           </div>
         </div>
