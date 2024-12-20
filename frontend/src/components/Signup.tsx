@@ -68,7 +68,7 @@ function Signup() {
           </div>
           <div className="w-full max-w-sm">
             {/* Name Input */}
-            <div className="mb-4">
+            {/* <div className="mb-4">
               <label className="block text-sm font-medium mb-2">Name</label>
               <input
                 type="text"
@@ -81,13 +81,13 @@ function Signup() {
                   })
                 }
               />
-            </div>
+            </div> */}
             {/* Email Input */}
             <div className="mb-4">
-              <label className="block text-sm font-medium mb-2">Email</label>
+              <label className="block text-sm font-medium mb-2">Id</label>
               <input
-                type="email"
-                placeholder="johndoe@gmail.com"
+                type="userId"
+                placeholder="Example123"
                 className="w-full h-12 p-4 border rounded-lg focus:ring-2 focus:ring-red-500"
                 onChange={(e) =>
                   setPostInputs({

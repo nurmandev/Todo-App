@@ -4,11 +4,10 @@ import { encryptPassword } from "../../utils/encrypt";
 import httpStatus from "http-status";
 
 const registerHandler = async (req, res) => {
-  const { name, email, password } = req.body;
+  const { userId, password } = req.body;
   const hashPassword = await encryptPassword(password);
   const user = await userService.createUser({
-    name,
-    email,
+    userId,
     password: hashPassword,
   });
   console.log(user);
