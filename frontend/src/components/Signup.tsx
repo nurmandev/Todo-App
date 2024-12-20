@@ -11,7 +11,7 @@ function Signup() {
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
   const [postInputs, setPostInputs] = useState({
-    name: "",
+    name: "John Doe",
     email: "",
     password: "",
   });
@@ -34,7 +34,7 @@ function Signup() {
         autoClose: 3000,
       });
 
-      setTimeout(() => navigate("/todos"), 3000); // Redirect after 3 seconds
+      setTimeout(() => navigate("/signin"), 3000); // Redirect after 3 seconds
     } catch (e: unknown) {
       console.error(e);
 
@@ -67,27 +67,12 @@ function Signup() {
             Sign Up
           </div>
           <div className="w-full max-w-sm">
-            {/* Name Input */}
-            {/* <div className="mb-4">
-              <label className="block text-sm font-medium mb-2">Name</label>
+            {/* Username Input */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-2">Username</label>
               <input
                 type="text"
-                placeholder="John Doe"
-                className="w-full h-12 p-4 border rounded-lg focus:ring-2 focus:ring-red-500"
-                onChange={(e) =>
-                  setPostInputs({
-                    ...postInputs,
-                    name: e.target.value,
-                  })
-                }
-              />
-            </div> */}
-            {/* Email Input */}
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-2">Id</label>
-              <input
-                type="userId"
-                placeholder="Example123"
+                placeholder="Enter Username"
                 className="w-full h-12 p-4 border rounded-lg focus:ring-2 focus:ring-red-500"
                 onChange={(e) =>
                   setPostInputs({
@@ -132,10 +117,7 @@ function Signup() {
             >
               Sign Up
             </button>
-            <div className="mt-4 text-sm text-gray-600">
-              By continuing with Email, you agree to Todoist's Terms of Service
-              and Privacy Policy.
-            </div>
+
             <div className="mt-4 text-center">
               Already have an account?{" "}
               <Link

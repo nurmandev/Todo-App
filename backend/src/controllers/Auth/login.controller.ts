@@ -5,8 +5,8 @@ import { comparePassword } from "../../utils/password";
 import httpStatus from "http-status";
 
 const loginHandler = async (req, res) => {
-  const { userId, password } = req.body;
-  const findUser = await userService.getOneUser({ userId });
+  const { email, password } = req.body;
+  const findUser = await userService.getOneUser({ email });
   if (!findUser) return null;
   if (findUser.deletedAt) return null;
   const compare = await comparePassword(password, findUser.password);

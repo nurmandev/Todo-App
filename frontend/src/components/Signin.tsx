@@ -13,7 +13,7 @@ function Signin() {
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
   const [postInputs, setPostInputs] = useState({
-    userId: "",
+    email: "",
     password: "",
   });
 
@@ -70,13 +70,13 @@ function Signin() {
           <div className="w-full max-w-sm">
             {/* Email Input */}
             <div className="mb-4">
-              <label className="block text-sm font-medium mb-2">Id</label>
+              <label className="block text-sm font-medium mb-2">Username</label>
               <input
-                type="userId"
-                placeholder="Example123"
+                type="text"
+                placeholder="Enter username"
                 className="w-full h-12 p-4 border rounded-lg focus:ring-2 focus:ring-red-500"
                 onChange={(e) =>
-                  setPostInputs({ ...postInputs, userId: e.target.value })
+                  setPostInputs({ ...postInputs, email: e.target.value })
                 }
               />
             </div>
@@ -112,10 +112,7 @@ function Signin() {
             >
               Log in
             </button>
-            <div className="mt-4 text-sm text-gray-600">
-              By continuing with Email, you agree to Todoist's Terms of Service
-              and Privacy Policy.
-            </div>
+
             <div className="mt-4 text-center">
               Don't have an account?{" "}
               <Link
