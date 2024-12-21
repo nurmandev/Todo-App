@@ -67,7 +67,22 @@ function Signup() {
             Sign Up
           </div>
           <div className="w-full max-w-sm">
-            {/* Username Input */}
+            {/* Name Input */}
+            {/* <div className="mb-4">
+              <label className="block text-sm font-medium mb-2">Name</label>
+              <input
+                type="text"
+                placeholder="John Doe"
+                className="w-full h-12 p-4 border rounded-lg focus:ring-2 focus:ring-red-500"
+                onChange={(e) =>
+                  setPostInputs({
+                    ...postInputs,
+                    name: e.target.value,
+                  })
+                }
+              />
+            </div> */}
+            {/* Email Input */}
             <div className="mb-4">
               <label className="block text-sm font-medium mb-2">Username</label>
               <input
