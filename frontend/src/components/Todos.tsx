@@ -159,7 +159,7 @@ const TodoList: React.FC = () => {
     console.log("token", token);
     try {
       setLoading(true);
-      const response = await axios.get(`http://localhost:8000/api/v1/todos`, {
+      const response = await axios.get(`https://test-todo-wdtk.onrender.com/api/v1/todos`, {
         headers: { Authorization: token },
         params: { sortBy, order, status: filterStatus },
       });
@@ -175,7 +175,7 @@ const TodoList: React.FC = () => {
 
   const handleEdit = async (id: string, updatedTodo: TodoData) => {
     try {
-      await axios.put(`http://localhost:8000/api/v1/todos/${id}`, updatedTodo, {
+      await axios.put(`https://test-todo-wdtk.onrender.com/api/v1/todos/${id}`, updatedTodo, {
         headers: { Authorization: token },
       });
       setTodos((prevTodos) =>
@@ -190,7 +190,7 @@ const TodoList: React.FC = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      await axios.delete(`http://localhost:8000/api/v1/todos/${id}`, {
+      await axios.delete(`https://test-todo-wdtk.onrender.com/api/v1/todos/${id}`, {
         headers: { Authorization: token },
       });
       setTodos((prevTodos) => prevTodos.filter((todo) => todo.todoid !== id));

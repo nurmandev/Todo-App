@@ -29,7 +29,7 @@ function Create() {
     const token = localStorage.getItem("token");
     console.log("token", token);
     try {
-      await axios.post("http://localhost:8000/api/v1/todos/create", todoData, {
+      await axios.post("https://test-todo-wdtk.onrender.com/api/v1/todos/create", todoData, {
         headers: {
           Authorization: token,
         },

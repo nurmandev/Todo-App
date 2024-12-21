@@ -9,7 +9,7 @@ export const getReq = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8000/api/v1/todos", {
+      .get("https://test-todo-wdtk.onrender.com/api/v1/todos", {
         headers: {
           Authorization: localStorage.getItem("token"),
         },

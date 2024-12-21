@@ -21,7 +21,7 @@ function Signup() {
   async function signupReq() {
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/v1/auth/register",
+        "https://test-todo-wdtk.onrender.com/api/v1/auth/register",
         postInputs
       );
 
